@@ -6,7 +6,7 @@ class MoviesRepository {
 
   MoviesRepository(this.moviesApis);
 
-  Future<List<dynamic>> getAllMovies() async {
+  Future<List<model>> getAllMovies() async {
     final movies = await moviesApis.getAllMovies();
     return movies.map((movies) => model.fromJson(movies)).toList();
   }

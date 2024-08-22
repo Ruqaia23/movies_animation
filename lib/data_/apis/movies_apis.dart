@@ -15,7 +15,7 @@ class MoviesApis {
   }
   Future<List<dynamic>> getAllMovies() async {
     try {
-      Response response = await dio.get('model');
+      Response response = await dio.get('animation');
       print(response.data.toString());
       return response.data;
     } catch (e) {
