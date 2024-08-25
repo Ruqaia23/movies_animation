@@ -20,11 +20,11 @@ class MoviesItems extends StatelessWidget {
           color: Colors.grey,
           child: movie.posterURL!.isNotEmpty
               ? FadeInImage.assetNetwork(
-                  width: double.infinity,
-                  height: double.infinity,
+                  width: 20,
+                  height: 20,
                   placeholder: "assets/images/loading.gif",
                   image: movie.posterURL!,
-                  fit: BoxFit.cover,
+                  // fit: BoxFit.cover,
                 )
               : Image.asset('assets/images/movies.jpg'),
         ),

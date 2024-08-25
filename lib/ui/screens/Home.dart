@@ -3,6 +3,7 @@ import 'package:movies_animation/buesiness_logic/cubit/movies_cubit.dart';
 import 'package:movies_animation/data_/model/movies_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_animation/ui/widget/Movies_item.dart';
+import 'package:movies_animation/ui/widget/search.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,22 +14,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<model>? allMovies;
+  // late List<model> search;
+  // bool _isSearch = false;
+  // final _searchTextController = TextEditingController();
 
+//لاظهار البيانات
   void initState() {
     super.initState();
-    allMovies = BlocProvider.of<MoviesCubit>(context).getAllMovies();
-  }
-
-  Widget buildBlocwidght() {
-    return BlocBuilder<MoviesCubit, MoviesState>(builder: (context, state) {
-//اذا تحملت البيانات
-      if (state is MoviesLoaded) {
-        allMovies = (state).movies;
-        return buildLoadedList();
-      } else {
-        return showLoadingIndicator();
-      }
-    });
+    BlocProvider.of<MoviesCubit>(context).getAllMovies();
   }
 
   showLoadingIndicator() {
@@ -52,6 +45,18 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  buildBlocwidght() {
+    return BlocBuilder<MoviesCubit, MoviesState>(builder: (context, state) {
+//اذا تحملت البيانات
+      if (state is MoviesLoaded) {
+        allMovies = (state).movies;
+        return buildLoadedList();
+      } else {
+        return showLoadingIndicator();
+      }
+    });
   }
 
   buildMoviesList() {
