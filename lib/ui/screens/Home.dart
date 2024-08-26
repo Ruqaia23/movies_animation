@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies_animation/buesiness_logic/bloc/bloc/movies_bloc.dart';
 import 'package:movies_animation/buesiness_logic/cubit/movies_cubit.dart';
 import 'package:movies_animation/data_/model/movies_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,17 +15,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<model>? allMovies;
-  // late List<model> search;
-  // bool _isSearch = false;
-  // final _searchTextController = TextEditingController();
+  final _searchTextController = TextEditingController();
+  bool _isSearch = false;
 
-//لاظهار البيانات
+  @override
   void initState() {
     super.initState();
     BlocProvider.of<MoviesCubit>(context).getAllMovies();
   }
 
-  showLoadingIndicator() {
+  Widget showLoadingIndicator() {
     return Center(
       child: CircularProgressIndicator(
         color: Color.fromRGBO(242, 97, 17, 1),
@@ -32,14 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-//عرض البوسترات داخل الشاشه الرئيسيه
-  buildLoadedList() {
+  Widget buildLoadedList() {
     return SingleChildScrollView(
       child: Container(
         color: Color.fromARGB(4, 2, 24, 1),
         child: Column(
           children: [
-            //نعرضها في كلاس ثاني
             buildMoviesList(),
           ],
         ),
@@ -47,40 +45,39 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  buildBlocwidght() {
-    return BlocBuilder<MoviesCubit, MoviesState>(builder: (context, state) {
-//اذا تحملت البيانات
-      if (state is MoviesLoaded) {
-        allMovies = (state).movies;
-        return buildLoadedList();
-      } else {
-        return showLoadingIndicator();
-      }
-    });
+  Widget buildBlocwidght() {
+    return BlocBuilder<MoviesCubit, MoviesState>(
+      builder: (context, state) {
+        if (state is MoviesLoaded) {
+          allMovies = state.movies;
+          return buildLoadedList();
+        } else {
+          return showLoadingIndicator();
+        }
+      },
+    );
   }
 
-  buildMoviesList() {
-    //ترتيب الصور في القريد
+  Widget buildMoviesList() {
     return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          //عددهم
-          crossAxisCount: 2,
-          childAspectRatio: 2 / 3,
-          crossAxisSpacing: 1,
-          mainAxisSpacing: 1,
-        ),
-        shrinkWrap: true,
-        physics: const ClampingScrollPhysics(),
-        padding: EdgeInsets.zero,
-        itemCount: allMovies!.length,
-        itemBuilder: (ctx, i) {
-          return MoviesItems(
-            movie: allMovies![i],
-          );
-        });
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 2 / 3,
+        crossAxisSpacing: 1,
+        mainAxisSpacing: 1,
+      ),
+      shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
+      padding: EdgeInsets.zero,
+      itemCount: allMovies!.length,
+      itemBuilder: (ctx, i) {
+        return MoviesItems(
+          movie: allMovies![i],
+        );
+      },
+    );
   }
 
-//الاساسيه
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,10 +86,40 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Color.fromARGB(4, 2, 24, 1),
         title: Text(
           'Movies',
-          style: TextStyle(color: Colors.white, fontSize: 25),
+          style: TextStyle(
+            color: Color.fromRGBO(242, 97, 17, 1),
+          ),
         ),
+        actions: _buildAppBarActions(context),
       ),
       body: buildBlocwidght(),
+    );
+  }
+
+  List<Widget> _buildAppBarActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(
+          Icons.search,
+          color: Color.fromRGBO(242, 97, 17, 1),
+        ),
+        onPressed: () {
+          _startSearch(context);
+        },
+      ),
+    ];
+  }
+
+  void _startSearch(BuildContext context) {
+    setState(() {
+      _isSearch = true;
+    });
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SearchMovies(allMovies: allMovies!),
+      ),
     );
   }
 }

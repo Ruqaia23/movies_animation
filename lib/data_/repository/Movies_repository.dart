@@ -10,4 +10,9 @@ class MoviesRepository {
     final movies = await moviesApis.getAllMovies();
     return movies.map((movies) => model.fromJson(movies)).toList();
   }
+
+  Future<List<model>> searchMovies(String query) {
+    // TODO: implement searchMovies
+    throw UnimplementedError();
+  }
 }

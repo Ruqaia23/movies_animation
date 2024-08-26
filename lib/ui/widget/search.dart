@@ -1,107 +1,91 @@
-// import 'package:flutter/material.dart';
-// import 'package:movies_animation/buesiness_logic/cubit/movies_cubit.dart';
-// import 'package:movies_animation/data_/model/movies_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_animation/buesiness_logic/cubit/movies_cubit.dart';
+import 'package:movies_animation/data_/model/movies_model.dart';
 
-// class SearchMovies extends StatefulWidget {
-//   SearchMovies({super.key});
+class SearchMovies extends StatelessWidget {
+  final List<model> allMovies;
+  final TextEditingController _searchTextController = TextEditingController();
 
-//   @override
-//   State<SearchMovies> createState() => _SearchMoviesState();
-// }
+  SearchMovies({Key? key, required this.allMovies}) : super(key: key);
 
-// class _SearchMoviesState extends State<SearchMovies> {
-//   late List<model> allMovies = [];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color.fromARGB(4, 2, 24, 1),
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(4, 2, 24, 1),
+        title: TextField(
+          controller: _searchTextController,
+          cursorColor: Color.fromRGBO(242, 97, 17, 1),
+          decoration: InputDecoration(
+            hintText: 'Find a Movie...',
+            border: InputBorder.none,
+            hintStyle:
+                TextStyle(color: Color.fromRGBO(242, 97, 17, 1), fontSize: 18),
+          ),
+          style: TextStyle(color: Color.fromRGBO(242, 97, 17, 1), fontSize: 18),
+          onChanged: (searchText) {
+            context.read<MoviesCubit>().searchMovies(searchText);
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.clear,
+              color: Color.fromRGBO(242, 97, 17, 1),
+            ),
+            onPressed: () {
+              _clearSearch(context);
+            },
+          ),
+        ],
+      ),
+      body: BlocBuilder<MoviesCubit, MoviesState>(
+        builder: (context, state) {
+          if (state is MoviesLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is MoviesLoaded) {
+            final searchResults = state.movies;
+            if (searchResults.isEmpty) {
+              return Center(
+                child: Text(
+                  'No movies found',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            }
+            return ListView.builder(
+              itemCount: searchResults.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(
+                    searchResults[index].title ?? '',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+              },
+            );
+          } else if (state is MoviesError) {
+            return Center(
+              child: Text(
+                'Error loading movies',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
+          return Container();
+        },
+      ),
+    );
+  }
 
-//   late List<model> search = [];
+  void _clearSearch(BuildContext context) {
+    _searchTextController.clear();
+    context.read<MoviesCubit>().getAllMovies();
+  }
+}
 
-//   bool _isSearch = false;
+class MoviesError {}
 
-//   final _searchTextController = TextEditingController();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return TextField(
-//       controller: _searchTextController,
-//       cursorColor: Color.fromRGBO(242, 97, 17, 1),
-//       decoration: InputDecoration(
-//           hintText: 'Find a Movie...',
-//           border: InputBorder.none,
-//           hintStyle: TextStyle(color: Colors.white, fontSize: 18)),
-//       style: TextStyle(color: Colors.white, fontSize: 18),
-//       onChanged: (SearchMovies) {
-//         //عشان يظهر البحث بأول حرف يكتبه المستخدم
-//         addSearchForItemsToSearch(SearchMovies);
-//       },
-//     );
-//   }
-
-//   void addSearchForItemsToSearch(String searchText) {
-//     search.clear();
-//     search.addAll(allMovies
-//         .where((movie) => movie.title!.toLowerCase().startsWith(searchText))
-//         .toList());
-//     setState(() {});
-//   }
-
-//   List<Widget> buildAppBarAction() {
-//     if (_isSearch) {
-//       return [
-//         IconButton(
-//           onPressed: () {
-//             _clearSearch();
-//             Navigator.pop(context);
-//           },
-//           icon: Icon(
-//             Icons.clear,
-//             color: Color.fromRGBO(242, 97, 17, 1),
-//           ),
-//         )
-//       ];
-//     } else {
-//       return [
-//         IconButton(
-//             onPressed: _startSearch,
-//             icon: Icon(
-//               Icons.search,
-//               color: Color.fromRGBO(242, 97, 17, 1),
-//             ))
-//       ];
-//     }
-//   }
-
-// //
-//   void _startSearch() {
-//     ModalRoute.of(context)!.addLocalHistoryEntry(
-//       LocalHistoryEntry(onRemove: _stopSearching),
-//     );
-
-//     setState(() {
-//       _isSearch = true;
-//     });
-//   }
-
-//   void _stopSearching() {
-//     _clearSearch();
-
-//     setState(() {
-//       _isSearch = false;
-//     });
-//   }
-
-// //يمسح الداتا ،يرجع اللسته الاصليه
-//   _clearSearch() {
-//     setState(() {
-//       _searchTextController.clear();
-//     });
-//   }
-// }
-
-// class buildAppBarTitle extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Text(
-//       'Movies',
-//       style: TextStyle(color: Colors.white, fontSize: 25),
-//     );
-//   }
-// }
+class MoviesLoading {}

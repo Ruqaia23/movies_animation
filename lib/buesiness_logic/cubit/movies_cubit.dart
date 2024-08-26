@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:movies_animation/data_/model/movies_model.dart';
 import 'package:movies_animation/data_/repository/Movies_repository.dart';
+import 'package:movies_animation/ui/screens/Home.dart';
 
 part 'movies_state.dart';
 
@@ -17,4 +19,38 @@ class MoviesCubit extends Cubit<MoviesState> {
     });
     return movies;
   }
+
+  Future<void> searchMovies(String query) async {
+//     emit(
+//          MoviesLoading()); // استخدم MoviesLoading للإشارة إلى أن البيانات قيد التحميل
+//     try {
+//       final movies = await moviesRepository.searchMovies(query);
+//       emit(MoviesLoaded(movies));
+//     } catch (e) {
+//       emit(MoviesError(
+//           "Failed to search movies")); // لا حاجة لاستخدام as MoviesState هنا
+//     }
+//   }
+  }
+
+// Stream<SearchState> mapEventToState(SearchEvent event) async* {
+//     if (event is SearchTextChanged) {
+//       yield SearchLoading();
+//       try {
+//         if (event.searchText.isEmpty) {
+//           yield SearchInitial();
+//         } else {
+//           final searchResults = allMovies
+//               .where((movie) => movie.title!
+//                   .toLowerCase()
+//                   .startsWith(event.searchText.toLowerCase()))
+//               .toList();
+//           yield SearchLoaded(searchResults);
+//         }
+//       } catch (e) {
+//         yield SearchError("Failed to search movies");
+//       }
+//     } else if (event is ClearSearch) {
+//       yield SearchInitial();
+//     }
 }
