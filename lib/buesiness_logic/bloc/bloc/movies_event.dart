@@ -1,9 +1,9 @@
-abstract class SearchEvent {}
+// abstract class SearchEvent {}
 
-class SearchTextChanged extends SearchEvent {
-  final String searchText;
+// class SearchTextChanged extends SearchEvent {
+//   final String searchText;
 
-  SearchTextChanged(this.searchText);
-}
+//   SearchTextChanged(this.searchText);
+// }
 
-class ClearSearch extends SearchEvent {}
+// class ClearSearch extends SearchEvent {}

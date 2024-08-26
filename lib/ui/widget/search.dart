@@ -5,6 +5,7 @@ import 'package:movies_animation/data_/model/movies_model.dart';
 
 class SearchMovies extends StatelessWidget {
   final List<model> allMovies;
+
   final TextEditingController _searchTextController = TextEditingController();
 
   SearchMovies({Key? key, required this.allMovies}) : super(key: key);
@@ -86,6 +87,6 @@ class SearchMovies extends StatelessWidget {
   }
 }
 
-class MoviesError {}
-
 class MoviesLoading {}
+
+class MoviesError {}

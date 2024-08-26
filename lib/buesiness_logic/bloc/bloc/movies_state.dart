@@ -1,19 +1,19 @@
-import 'package:movies_animation/data_/model/movies_model.dart';
+// import 'package:movies_animation/data_/model/movies_model.dart';
 
-abstract class SearchState {}
+// abstract class SearchState {}
 
-class SearchInitial extends SearchState {}
+// class SearchInitial extends SearchState {}
 
-class SearchLoading extends SearchState {}
+// class SearchLoading extends SearchState {}
 
-class SearchLoaded extends SearchState {
-  final List<model> searchResults;
+// class SearchLoaded extends SearchState {
+//   final List<model> searchResults;
 
-  SearchLoaded(this.searchResults);
-}
+//   SearchLoaded(this.searchResults);
+// }
 
-class SearchError extends SearchState {
-  final String errorMessage;
+// class SearchError extends SearchState {
+//   final String errorMessage;
 
-  SearchError(this.errorMessage);
-}
+//   SearchError(this.errorMessage);
+// }
