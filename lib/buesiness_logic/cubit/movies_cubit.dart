@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:movies_animation/buesiness_logic/bloc/bloc/movies_event.dart';
-import 'package:movies_animation/buesiness_logic/bloc/bloc/movies_state.dart';
 import 'package:movies_animation/data_/model/movies_model.dart';
 import 'package:movies_animation/data_/repository/Movies_repository.dart';
 import 'package:movies_animation/ui/screens/Home.dart';

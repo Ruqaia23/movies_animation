@@ -3,12 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_animation/buesiness_logic/cubit/movies_cubit.dart';
 import 'package:movies_animation/data_/model/movies_model.dart';
 
-class SearchMovies extends StatelessWidget {
+class SearchMovies extends StatefulWidget {
   final List<model> allMovies;
+  final MoviesCubit? moviesCubit;
 
-  final TextEditingController _searchTextController = TextEditingController();
+  SearchMovies({Key? key, required this.allMovies, this.moviesCubit})
+      : super(key: key);
 
-  SearchMovies({Key? key, required this.allMovies}) : super(key: key);
+  @override
+  State<SearchMovies> createState() => _SearchMoviesState();
+}
+
+class _SearchMoviesState extends State<SearchMovies> {
+  late List<model> searchedForMovies;
+
+  bool _isSearch = false;
+
+  final TextEditingController searchTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +27,13 @@ class SearchMovies extends StatelessWidget {
       backgroundColor: Color.fromARGB(4, 2, 24, 1),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(4, 2, 24, 1),
+        leading: _isSearch
+            ? Container()
+            : (BackButton(
+                color: Color.fromRGBO(242, 97, 17, 1),
+              )),
         title: TextField(
-          controller: _searchTextController,
+          controller: searchTextController,
           cursorColor: Color.fromRGBO(242, 97, 17, 1),
           decoration: InputDecoration(
             hintText: 'Find a Movie...',
@@ -27,7 +43,7 @@ class SearchMovies extends StatelessWidget {
           ),
           style: TextStyle(color: Color.fromRGBO(242, 97, 17, 1), fontSize: 18),
           onChanged: (searchText) {
-            context.read<MoviesCubit>().searchMovies(searchText);
+            BlocProvider.of<MoviesCubit>(context).searchMovies;
           },
         ),
         actions: [
@@ -37,12 +53,15 @@ class SearchMovies extends StatelessWidget {
               color: Color.fromRGBO(242, 97, 17, 1),
             ),
             onPressed: () {
-              _clearSearch(context);
+              clearSearch();
+              Navigator.pop(context);
             },
           ),
         ],
       ),
       body: BlocBuilder<MoviesCubit, MoviesState>(
+        //مهم للاستدعاء
+        bloc: widget.moviesCubit,
         builder: (context, state) {
           if (state is MoviesLoading) {
             return Center(child: CircularProgressIndicator());
@@ -81,8 +100,21 @@ class SearchMovies extends StatelessWidget {
     );
   }
 
-  void _clearSearch(BuildContext context) {
-    _searchTextController.clear();
+//عشان يبحث بالحرف الاول الاسم الي يبدا بالحرف ينعرض
+  // void addSearchedOfItemsToSearchedList(String searchText) {
+  //   searchedForMovies = widget.allMovies
+  //       .where((movie) => movie.title!.toLowerCase().startsWith(searchText))
+  //       .toList();
+  //   print(searchText);
+  //   setState(() {});
+  // }
+}
+
+class clearSearch {
+  final TextEditingController searchTextController = TextEditingController();
+  @override
+  build(BuildContext context) {
+    searchTextController.clear();
     context.read<MoviesCubit>().getAllMovies();
   }
 }

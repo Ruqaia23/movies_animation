@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movies_animation/buesiness_logic/bloc/bloc/movies_bloc.dart';
 import 'package:movies_animation/buesiness_logic/cubit/movies_cubit.dart';
 import 'package:movies_animation/data_/model/movies_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<model>? allMovies;
+  late List<model> searchedForMovies;
   final _searchTextController = TextEditingController();
   bool _isSearch = false;
 
@@ -69,11 +69,14 @@ class _HomeScreenState extends State<HomeScreen> {
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
       padding: EdgeInsets.zero,
-      itemCount: allMovies!.length,
+      itemCount: _searchTextController.text.isEmpty
+          ? allMovies!.length
+          : searchedForMovies.length,
       itemBuilder: (ctx, i) {
         return MoviesItems(
-          movie: allMovies![i],
-        );
+            movie: _searchTextController.text.isEmpty
+                ? allMovies![i]
+                : searchedForMovies[i]);
       },
     );
   }
@@ -104,13 +107,15 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Color.fromRGBO(242, 97, 17, 1),
         ),
         onPressed: () {
-          _startSearch(context);
+          _startSearch();
         },
       ),
     ];
   }
 
-  void _startSearch(BuildContext context) {
+  void _startSearch() {
+    ModalRoute.of(context)!
+        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
     setState(() {
       _isSearch = true;
     });
@@ -118,8 +123,24 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => SearchMovies(allMovies: allMovies!),
+        builder: (_) => SearchMovies(
+          allMovies: allMovies!,
+          moviesCubit: context.read<MoviesCubit>(),
+        ),
       ),
     );
   }
+
+  void _stopSearching() {
+    clearSearch();
+
+    setState(() {
+      _isSearch = true;
+    });
+  }
+
+  // void clearSearch(BuildContext context) {
+  //   _searchTextController.clear();
+  //   context.read<MoviesCubit>().getAllMovies();
+  // }
 }
