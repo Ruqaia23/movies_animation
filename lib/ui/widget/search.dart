@@ -43,7 +43,7 @@ class _SearchMoviesState extends State<SearchMovies> {
           ),
           style: TextStyle(color: Color.fromRGBO(242, 97, 17, 1), fontSize: 18),
           onChanged: (searchText) {
-            BlocProvider.of<MoviesCubit>(context).searchMovies;
+            widget.moviesCubit?.searchMovies(searchTextController.text);
           },
         ),
         actions: [
